@@ -37,7 +37,7 @@ export default function DataTable({
     isLoading?: boolean;
     totalPages: number;
     currentPage: number;
-    currentLimi: number;
+    currentLimit: number;
     onChangePage: (page: number) => void;
     onChangeLimit: (limit: number) => void;
 }) {

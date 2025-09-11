@@ -1,3 +1,5 @@
+import { Label } from "@radix-ui/react-dropdown-menu";
+
 export const INITIAL_LOGIN_FORM = {
     email: '',
     password: '',
@@ -18,3 +20,38 @@ export const INITIAL_STATE_PROFILE = {
     role: '',
     avatar_url: '',
 };
+
+export const INITIAL_CREATE_USER_FORM = {
+    email: '',
+    name: '',
+    password: '',
+    role: '',
+    avatar_url: '',
+}
+
+export const INITIAL_STATE_CREATE_USER = {
+    status: 'idle',
+    errors: {
+        name: [],
+        email: [],
+        password: [],
+        role: [],
+        avatar_url: [],
+        _form: [],
+    },
+}
+
+export const ROLE_LIST = [
+    {
+        value: 'admin',
+        label: 'Admin',
+    },
+    {
+        value: 'kitchen',
+        label: 'Kitchen',
+    },
+    {
+        value: 'cashier',
+        label: 'Cashier',
+    }
+] 

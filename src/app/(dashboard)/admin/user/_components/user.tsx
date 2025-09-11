@@ -11,14 +11,21 @@ import { useMemo } from "react";
 import DropdownAction from "@/components/common/dropdown-action";
 import { Pencil, Trash2 } from "lucide-react";
 import useDataTable from "@/hooks/use-data-table";
+import DialogCreateUser from "./dialog-create-user";
 
 export default function UserManagement() {
     const supabase = createClient();
-    const { currentPage, currentLimit, handleChangePage, handleChangeLimit } =
-        useDataTable();
+    const {
+        currentPage,
+        currentLimit,
+        currentSearch,
+        handleChangePage,
+        handleChangeLimit,
+        handleChangeSearch,
+    } = useDataTable();
 
-    const { data: users, isLoading } = useQuery({
-        queryKey: ["users", currentPage, currentLimit],
+    const { data: users, isLoading, refetch } = useQuery({
+        queryKey: ["users", currentPage, currentLimit, currentSearch],
         queryFn: async () => {
             const result = await supabase
                 .from("profiles")
@@ -27,7 +34,8 @@ export default function UserManagement() {
                     (currentPage - 1) * currentLimit,
                     currentPage * currentLimit - 1
                 )
-                .order("created_at");
+                .order("created_at")
+                .ilike("name", `%${currentSearch}%`);
 
             if (result.error)
                 toast.error("Gagal mengambil user data", {
@@ -84,11 +92,17 @@ export default function UserManagement() {
                 <h1 className="text-2xl font-bold">User Management</h1>
 
                 <div className="flex gap-2">
-                    <Input placeholder="Cari User" />
+                    <Input
+                        placeholder="Cari User"
+                        onChange={(e) => {
+                            handleChangeSearch(e.target.value);
+                        }}
+                    />
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button variant="outline">Create</Button>
                         </DialogTrigger>
+                        <DialogCreateUser refetch={refetch} />
                     </Dialog>
                 </div>
             </div>
@@ -97,11 +111,11 @@ export default function UserManagement() {
                 header={HEADER_TABLE_USER}
                 data={filteredData}
                 isLoading={isLoading}
-                totalPages = {totalPages}
-                currentPage = {currentPage}
-                currentLimit = {currentLimit}
-                onChangePage = {handleChangePage}
-                onChangeLimit = {handleChangeLimit}
+                totalPages={totalPages}
+                currentPage={currentPage}
+                currentLimit={currentLimit}
+                onChangePage={handleChangePage}
+                onChangeLimit={handleChangeLimit}
             />
         </div>
     );
