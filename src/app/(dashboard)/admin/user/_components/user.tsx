@@ -7,11 +7,13 @@ import { createClient } from "@/lib/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { HEADER_TABLE_USER } from "@/constants/user-constant";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import DropdownAction from "@/components/common/dropdown-action";
 import { Pencil, Trash2 } from "lucide-react";
 import useDataTable from "@/hooks/use-data-table";
 import DialogCreateUser from "./dialog-create-user";
+import { Profile } from "@/types/auth";
+import DialogUpdateUser from "./dialog-update-user";
 
 export default function UserManagement() {
     const supabase = createClient();
@@ -24,7 +26,11 @@ export default function UserManagement() {
         handleChangeSearch,
     } = useDataTable();
 
-    const { data: users, isLoading, refetch } = useQuery({
+    const {
+        data: users,
+        isLoading,
+        refetch,
+    } = useQuery({
         queryKey: ["users", currentPage, currentLimit, currentSearch],
         queryFn: async () => {
             const result = await supabase
@@ -46,6 +52,11 @@ export default function UserManagement() {
         },
     });
 
+    const [selectedAction, setSelectedAction] = useState<{
+        data: Profile;
+        type: "update" | "delete";
+    } | null>(null);
+
     const filteredData = useMemo(() => {
         return (users?.data || []).map((user, index) => {
             return [
@@ -62,7 +73,12 @@ export default function UserManagement() {
                                     Edit
                                 </span>
                             ),
-                            action: () => {},
+                            action: () => {
+                                setSelectedAction({
+                                    data: user,
+                                    type: 'update',
+                                })
+                            },
                         },
                         {
                             label: (
@@ -85,6 +101,10 @@ export default function UserManagement() {
             ? Math.ceil(users.count / currentLimit)
             : 0;
     }, [users]);
+
+    const handleChangeAction = (open: boolean) => {
+        if (!open) setSelectedAction(null);
+    };
 
     return (
         <div className="w-full">
@@ -116,6 +136,12 @@ export default function UserManagement() {
                 currentLimit={currentLimit}
                 onChangePage={handleChangePage}
                 onChangeLimit={handleChangeLimit}
+            />
+            <DialogUpdateUser
+                open={selectedAction !== null && selectedAction.type === "update"}
+                refetch={refetch}
+                currentData={selectedAction?.data}
+                handleChangeAction={handleChangeAction}
             />
         </div>
     );

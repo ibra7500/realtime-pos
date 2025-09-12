@@ -26,6 +26,8 @@ import { createUser } from "../actions";
 import { toast } from "sonner";
 import FormSelect from "@/components/common/form-select";
 import FormImage from "@/components/common/form-image";
+import { Preview } from "@/types/general";
+import FormUser from "./form-user";
 
 export default function DialogCreateUser({ refetch }: { refetch: () => void }) {
     const form = useForm<CreateUserForm>({
@@ -36,15 +38,16 @@ export default function DialogCreateUser({ refetch }: { refetch: () => void }) {
     const [createUserState, createUserAction, isPendingCreateUser] =
         useActionState(createUser, INITIAL_STATE_CREATE_USER);
 
-    const [preview, setPreview] = useState<
-        { file: File; displayUrl: string } | undefined
-    >(undefined);
+    const [preview, setPreview] = useState<Preview | undefined>(undefined);
 
     const onSubmit = form.handleSubmit(async (data) => {
         const formData = new FormData();
 
         Object.entries(data).forEach(([key, value]) => {
-            formData.append(key, key === 'avatar_url' ? preview!.file ?? '' : value);
+            formData.append(
+                key,
+                key === "avatar_url" ? preview!.file ?? "" : value
+            );
         });
         startTransition(() => {
             createUserAction(formData);
@@ -70,60 +73,13 @@ export default function DialogCreateUser({ refetch }: { refetch: () => void }) {
     }, [createUserState]);
 
     return (
-        <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-                <DialogTitle>Create User</DialogTitle>
-                <DialogDescription>Create a new user</DialogDescription>
-            </DialogHeader>
-            <Form {...form}>
-                <form onSubmit={onSubmit} className="space-y-4">
-                    <FormInput
-                        form={form}
-                        name="name"
-                        label="Name"
-                        placeholder="Insert Name here"
-                    />
-                    <FormInput
-                        form={form}
-                        name="email"
-                        label="Email"
-                        placeholder="Insert email here"
-                        type="email"
-                    />
-                    <FormSelect
-                        form={form}
-                        name="role"
-                        label="Role"
-                        selectItem={ROLE_LIST}
-                    />
-                    <FormInput
-                        form={form}
-                        name="password"
-                        label="Password"
-                        placeholder="Insert password here"
-                        type="password"
-                    />
-                    <FormImage
-                        form={form}
-                        name="avatar_url"
-                        label="Avatar"
-                        preview={preview}
-                        setPreview={setPreview}
-                    />
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button variant="outline">Cancel</Button>
-                        </DialogClose>
-                        <Button type="submit">
-                            {isPendingCreateUser ? (
-                                <Loader2 className="animate-spin" />
-                            ) : (
-                                "Submit"
-                            )}
-                        </Button>
-                    </DialogFooter>
-                </form>
-            </Form>
-        </DialogContent>
+        <FormUser
+            form={form}
+            onSubmit={onSubmit}
+            isLoading={isPendingCreateUser}
+            type="Create"
+            preview={preview}
+            setPreview={setPreview}
+        />
     );
 }
