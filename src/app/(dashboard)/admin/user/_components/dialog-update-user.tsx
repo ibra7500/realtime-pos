@@ -58,13 +58,13 @@ export default function DialogUpdateUser({
 
     useEffect(() => {
         if (updateUserState?.status === "error") {
-            toast.error("Login Failed", {
+            toast.error("Update user failed", {
                 description: updateUserState.errors?._form?.[0],
             });
         }
 
         if (updateUserState.status === "success") {
-            toast.success("Create user success!");
+            toast.success("Update user success!");
             form.reset();
             handleChangeAction?.(false);
             refetch();

@@ -29,7 +29,7 @@ export default function FormUser<T extends FieldValues>({
     onSubmit: (event: FormEvent<HTMLFormElement>) => void;
     isLoading: boolean;
     type: "Create" | "Update";
-    preview: Preview;
+    preview?: Preview;
     setPreview?: (preview: Preview) => void;
 }) {
     return (
