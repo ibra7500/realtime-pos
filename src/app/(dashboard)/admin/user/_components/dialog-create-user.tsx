@@ -1,14 +1,3 @@
-import FormInput from "@/components/common/form-input";
-import { Button } from "@/components/ui/button";
-import {
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import { Form } from "@/components/ui/form";
 import {
     INITIAL_CREATE_USER_FORM,
     INITIAL_STATE_CREATE_USER,
@@ -49,6 +38,7 @@ export default function DialogCreateUser({ refetch }: { refetch: () => void }) {
                 key === "avatar_url" ? preview!.file ?? "" : value
             );
         });
+
         startTransition(() => {
             createUserAction(formData);
         });
@@ -56,7 +46,7 @@ export default function DialogCreateUser({ refetch }: { refetch: () => void }) {
 
     useEffect(() => {
         if (createUserState?.status === "error") {
-            toast.error("Login Failed", {
+            toast.error("Create user failed", {
                 description: createUserState.errors?._form?.[0],
             });
         }

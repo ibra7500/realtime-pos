@@ -32,6 +32,7 @@ export default function FormInput<T extends FieldValues>({
                     <FormControl>
                         {type === "textarea" ? (
                             <Textarea
+                                {...rest}
                                 placeholder={placeholder}
                                 autoComplete="off"
                                 className="resize-none"
