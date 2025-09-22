@@ -84,8 +84,11 @@ export default function TableManagement() {
                 table.capacity,
                 <div
                     className={cn(
-                        "capitalize px-2 py-1 rounded-full text-white w-fit",
-                        table.status === 'available' ? "bg-green-500" : "bg-red-500"
+                        "capitalize px-2 py-1 rounded-full text-white w-fit", {
+                            'bg-green-500': table.status === 'available',
+                            'bg-red-500': table.status === 'unavailable',
+                            'bg-yellow-500': table.status === 'reserved',
+                        }
                     )}
                 >
                     {table.status}
