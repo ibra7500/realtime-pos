@@ -37,7 +37,7 @@ export default function DialogDeleteMenu({
         }
 
         if (deleteMenuState.status === "success") {
-            toast.success("Delete user success!");
+            toast.success("Delete menu success!");
             handleChangeAction?.(false);
             refetch();
         }
