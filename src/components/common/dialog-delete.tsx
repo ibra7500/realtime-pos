@@ -22,7 +22,7 @@ export default function DialogDelete({
                     <DialogHeader>
                         <DialogTitle>Delete {title}</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete this {' '} <span className="lowercase">{title}</span>
+                            Are you sure you want to delete {' '} <span className="lowercase">{title}</span>
                         </DialogDescription>
                     </DialogHeader>
 

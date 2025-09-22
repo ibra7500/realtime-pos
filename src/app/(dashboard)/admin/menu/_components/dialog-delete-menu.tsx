@@ -1,6 +1,6 @@
 import DialogDelete from "@/components/common/dialog-delete";
 import { INITIAL_STATE_ACTION } from "@/constants/general-constant";
-import { startTransition, useActionState, useEffect } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { deleteMenu } from "../actions";
 import { toast } from "sonner";
 import { Menu } from "@/validations/menu-validation";
@@ -16,6 +16,8 @@ export default function DialogDeleteMenu({
     open?: boolean;
     handleChangeAction?: (open: boolean) => void;
 }) {
+    const [title, setTitle] = useState<string>("");
+
     const [deleteMenuState, deleteMenuAction, isPendingDeleteMenu] =
         useActionState(deleteMenu, INITIAL_STATE_ACTION);
 
@@ -28,6 +30,12 @@ export default function DialogDeleteMenu({
             deleteMenuAction(formData);
         });
     };
+
+    useEffect(() => {
+        if (open) {
+            setTitle(currentData?.name ?? ""); // safe fallback
+        }
+    }, [open]);
 
     useEffect(() => {
         if (deleteMenuState?.status === "error") {
@@ -49,7 +57,7 @@ export default function DialogDeleteMenu({
             onOpenChange={handleChangeAction}
             isLoading={isPendingDeleteMenu}
             onSubmit={onSubmit}
-            title="Menu"
+            title={title}
         />
     );
 }
